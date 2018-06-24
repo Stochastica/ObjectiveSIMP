@@ -20,11 +20,14 @@ type = identifier       (* Normal *)
 
 program = list top-level-exp
 
-top-level-exp = list (function | class)
+top-level-exp = list (function-def | function-decl | class)
 
-function = type (* Return type *)
+function-def = type (* Return type *)
 	~ list ("(" ~ type _ identifier ~ ")") (* args *)
 	~ block
+
+function-decl = type (* Return type *)
+	~ list ("(" ~ type _ identifier ~ ")") (* args *)
 
 statement = expression
           | block
@@ -47,7 +50,7 @@ class = "class" _ identifier
 	~ ["extends" _ list identifier]
 	~ list ("(" ~ (method|field) ~ ")")
 
-method = access-modifier _ inheritance-modifier _ function
+method = access-modifier _ inheritance-modifier _ (function-def|function-decl)
 field = access-modifier _ type _ identifier
 
 

@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include "Options.hpp"
+#include "Lexer.hpp"
+#include "Parser.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -18,6 +20,23 @@ int main(int argc, char* argv[])
 		std::cerr << options.help();
 		return 0;
 	}
-	std::cout << options.state();
+
+	// Execute by stage
+	if (options.count("-s"))
+	{
+		// Lexer stage
+		if (options.optionValues("-s")[0] == "1")
+		{
+			std::string filename = options.optionValues("")[0];
+			Lexer lex(filename);
+			lex.readAll();
+
+			std::cerr << lex.print();
+		}
+	}
+	else
+	{
+		std::cout << options.state();
+	}
 	return 0;
 }
