@@ -1,0 +1,53 @@
+(* EBNF *)
+
+
+(* Objective-SIMP language specification *)
+
+(* Identifiers and literals *)
+
+
+identifier = (letter| "_") {letter | number | "_"}
+           | symbol {symbol}
+literal = <VALID C LITERAL>
+
+_ = whitespace {whitespace}
+~ = {whitespace}
+
+type = identifier       (* Normal *)
+     | "(" ~ type ~ ")" (* Pointer *)
+
+(* Program structure *)
+
+program = list top-level-exp
+
+top-level-exp = list (function | class)
+
+function = type (* Return type *)
+	~ list ("(" ~ type _ identifier ~ ")") (* args *)
+	~ block
+
+statement = expression
+          | block
+          | type _ identifier
+
+block = "(" { ~ "(" statement ")" ~ } ")"
+
+expression = identifier
+           | "return" ~ expression
+           | ":=" identifier _ "(" ~ expression ~ ")" (* Assignment *)
+           | expression {~ expression} (* Function application *)
+           | "new" ~ type
+
+(* Class *)
+
+access-modifier = "public" | "protected" | "private"
+inheritance-modifier = "virtual" | "final"
+
+class = "class" _ identifier
+	~ ["extends" _ list identifier]
+	~ list ("(" ~ (method|field) ~ ")")
+
+method = access-modifier _ inheritance-modifier _ function
+field = access-modifier _ type _ identifier
+
+

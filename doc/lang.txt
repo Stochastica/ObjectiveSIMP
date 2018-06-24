@@ -1,6 +1,0 @@
-# Objective-SIMP language specification
-
-program = [top-level-exp]
-
-top-level-exp = function
-              | class
